@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: j3-monitor-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python j3_monitor_final.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: SCHOOL21_PASSWORD
+        sync: false
+      - key: TARGET_ROW
+        value: j
+      - key: TARGET_NUMBER
+        value: 3
