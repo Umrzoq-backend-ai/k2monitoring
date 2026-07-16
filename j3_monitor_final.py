@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-J3 Workplace Monitor Bot
+K2 Workplace Monitor Bot
 
-A Telegram bot that monitors J3 workplace in Tillakori cluster
+A Telegram bot that monitors K2 workplace in Tillakori cluster
 and sends notifications when users login/logout.
 
 Author: rrangesi
@@ -35,8 +35,8 @@ class Config:
     
     # Monitoring settings
     CLUSTER_ID: int = 36738  # Tillakori
-    TARGET_ROW: str = "j"
-    TARGET_NUMBER: int = 3
+    TARGET_ROW: str = "k"
+    TARGET_NUMBER: int = 2
     CHECK_INTERVAL: int = 60  # seconds
     
     # Telegram
@@ -44,7 +44,7 @@ class Config:
     TELEGRAM_CHAT_ID: str = ""
     
     # Logging
-    LOG_FILE: str = "j3_monitor.log"
+    LOG_FILE: str = "k2_monitor.log"
     LOG_LEVEL: int = logging.INFO
     
     @classmethod
@@ -59,12 +59,13 @@ class Config:
         config.TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', env_vars.get('TELEGRAM_BOT_TOKEN', ''))
         config.TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', env_vars.get('TELEGRAM_CHAT_ID', ''))
         config.SCHOOL21_PASSWORD = os.environ.get('SCHOOL21_PASSWORD', env_vars.get('SCHOOL21_PASSWORD', ''))
+        config.SCHOOL21_USERNAME = os.environ.get('SCHOOL21_USERNAME', env_vars.get('SCHOOL21_USERNAME', config.SCHOOL21_USERNAME))
         
         # Workplace configuration
-        target_row = os.environ.get('TARGET_ROW', env_vars.get('TARGET_ROW', 'j'))
+        target_row = os.environ.get('TARGET_ROW', env_vars.get('TARGET_ROW', 'k'))
         config.TARGET_ROW = target_row.lower()
         
-        target_number = os.environ.get('TARGET_NUMBER', env_vars.get('TARGET_NUMBER', '3'))
+        target_number = os.environ.get('TARGET_NUMBER', env_vars.get('TARGET_NUMBER', '2'))
         config.TARGET_NUMBER = int(target_number)
         
         return config
@@ -92,7 +93,7 @@ class Config:
 
 def setup_logging(config: Config) -> logging.Logger:
     """Configure logging"""
-    logger = logging.getLogger('J3Monitor')
+    logger = logging.getLogger('K2Monitor')
     logger.setLevel(config.LOG_LEVEL)
     
     # File handler
@@ -543,7 +544,7 @@ def home():
     """Health check endpoint"""
     return {
         'status': 'alive',
-        'bot': 'J3 Monitor',
+        'bot': 'K2 Monitor',
         'timestamp': datetime.now().isoformat()
     }
 
@@ -571,7 +572,7 @@ def main() -> int:
     # Setup logging
     logger = setup_logging(config)
     logger.info("="*70)
-    logger.info("J3 Workplace Monitor Bot Starting")
+    logger.info("K2 Workplace Monitor Bot Starting")
     logger.info("="*70)
     
     # Validate configuration
@@ -598,7 +599,7 @@ def main() -> int:
     )
     
     # Send startup notification
-    telegram.send_message("J3 Monitoring Bot ishga tushdi!")
+    telegram.send_message("K2 Monitoring Bot ishga tushdi!")
     
     # Start Flask server in separate thread
     logger.info("Starting Flask web server...")

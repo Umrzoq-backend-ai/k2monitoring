@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: j3-monitor-bot
+    name: k2-monitor-bot
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: python j3_monitor_final.py
@@ -12,6 +12,6 @@ services:
       - key: SCHOOL21_PASSWORD
         sync: false
       - key: TARGET_ROW
-        value: j
+        value: k
       - key: TARGET_NUMBER
-        value: 3
+        value: 2
