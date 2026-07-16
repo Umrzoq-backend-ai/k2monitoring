@@ -15,3 +15,8 @@ services:
         value: k
       - key: TARGET_NUMBER
         value: 2
+      - key: RENDER_EXTERNAL_URL
+        fromService:
+          type: web
+          name: k2-monitor-bot
+          property: host

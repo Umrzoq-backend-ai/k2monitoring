@@ -561,6 +561,36 @@ def run_flask_server():
 
 
 # ============================================================================
+# Self-Ping (Render.com free tier keep-alive)
+# ============================================================================
+
+def run_self_ping(logger: logging.Logger) -> None:
+    """Ping own /health endpoint every 10 minutes to prevent Render sleep"""
+    # Wait for Flask to start
+    time.sleep(15)
+
+    render_host = os.environ.get('RENDER_EXTERNAL_URL', '')
+    if not render_host:
+        logger.info("RENDER_EXTERNAL_URL not set, self-ping disabled")
+        return
+
+    # Normalize URL
+    if not render_host.startswith('http'):
+        render_host = f"https://{render_host}"
+    ping_url = render_host.rstrip('/') + '/health'
+
+    logger.info(f"Self-ping started: {ping_url} every 10 min")
+
+    while True:
+        try:
+            resp = requests.get(ping_url, timeout=10)
+            logger.info(f"Self-ping OK: {resp.status_code}")
+        except Exception as e:
+            logger.warning(f"Self-ping failed: {e}")
+        time.sleep(600)  # 10 minutes
+
+
+# ============================================================================
 # Application Entry Point
 # ============================================================================
 
@@ -610,6 +640,15 @@ def main() -> int:
     )
     flask_thread.start()
     logger.info("Flask server started")
+
+    # Start self-ping thread (keep-alive for Render.com free tier)
+    ping_thread = threading.Thread(
+        target=run_self_ping,
+        args=(logger,),
+        daemon=True,
+        name="SelfPing"
+    )
+    ping_thread.start()
     
     # Initialize monitor
     monitor = WorkplaceMonitor(api, telegram, config, logger)
